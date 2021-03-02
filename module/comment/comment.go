@@ -8,6 +8,7 @@ type IComment interface {
 	SetDescription(d string)
 	GetComments() []IComment
 	AddNestedComment(c IComment)
+	EditNestedComment(commentID string, desc string)
 	DeleteNestedComment(commentID string)
 }
 
@@ -48,6 +49,15 @@ func (c *Comment) GetComments() []IComment {
 
 func (c *Comment) AddNestedComment(nc IComment) {
 	c.Comments = append(c.Comments, nc)
+}
+
+func (c *Comment) EditNestedComment(id string, desc string) {
+	for i := 0; i < len(c.Comments); i++ {
+		if c.Comments[i].GetID() == id {
+			c.Comments[i].SetDescription(desc)
+			break
+		}
+	}
 }
 
 func (c *Comment) DeleteNestedComment(id string) {

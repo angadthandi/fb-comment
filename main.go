@@ -10,6 +10,7 @@ import (
 func main() {
 	fmt.Println("fb-comment")
 
+	// setup --------------------------------
 	user1 := user.GetInstance("User 1")
 
 	c1 := comment.GetInstance()
@@ -23,24 +24,36 @@ func main() {
 
 	p1 := post.GetInstance()
 
+	// add comments & replies --------------------------------
 	user1.AddCommentToPost(p1, c1)
 	user1.AddCommentToPost(p1, c2)
 	user1.ReplyToComment(p1, c1.GetID(), c11)
 	user1.ReplyToComment(p1, c2.GetID(), c21)
 
-	p1Comments := p1.GetComments()
-	for i := 0; i < len(p1Comments); i++ {
-		fmt.Printf(
-			"Comment: %s\n",
-			p1Comments[i].GetDescription(),
-		)
+	user1.PrintPostComments(p1)
 
-		comments := p1Comments[i].GetComments()
-		for j := 0; j < len(comments); j++ {
-			fmt.Printf(
-				"\tReply: %s\n",
-				comments[j].GetDescription(),
-			)
-		}
-	}
+	// edit reply --------------------------------
+	user1.EditReply(p1, c1.GetID(), c11.GetID(), "C 11 edited")
+
+	user1.PrintPostComments(p1)
+
+	// add more replies --------------------------------
+	c12 := comment.GetInstance()
+	c12.SetDescription("C 12")
+	c13 := comment.GetInstance()
+	c13.SetDescription("C 13")
+	user1.ReplyToComment(p1, c1.GetID(), c12)
+	user1.ReplyToComment(p1, c1.GetID(), c13)
+
+	user1.PrintPostComments(p1)
+
+	// delete reply --------------------------------
+	user1.DeleteReply(p1, c1.GetID(), c12.GetID())
+
+	user1.PrintPostComments(p1)
+
+	// delete comment --------------------------------
+	user1.DeleteComment(p1, c1.GetID())
+
+	user1.PrintPostComments(p1)
 }
